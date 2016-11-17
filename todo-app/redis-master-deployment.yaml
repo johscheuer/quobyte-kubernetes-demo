@@ -1,0 +1,60 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: redis-master
+  namespace: todo-app
+  labels:
+    name: redis-master
+spec:
+  replicas: 1
+  template:
+    metadata:
+      name: redis-master
+      namespace: todo-app
+      labels:
+        name: redis-master
+    spec:
+      containers:
+        - name: "redis-master"
+          image: "redis:3.0"
+          command: 
+            - /bin/bash
+            - -xec
+            - |
+              if [ "$(ls -A /var/lib/redis)"]; then
+                  # restore AOF
+                  redis-check-aof --fix
+              fi
+
+              redis-server /usr/local/etc/redis/redis.conf
+          resources:
+            limits:
+              cpu: 100m
+            requests:
+              cpu: 100m
+          ports:
+            - containerPort: 6379
+              protocol: "TCP"
+          volumeMounts:
+            - name: "redis-conf"
+              mountPath: "/usr/local/etc/redis/"
+            - name: "redis-data"
+              mountPath: "/var/lib/redis"
+          livenessProbe:
+              exec:
+                command:
+                  - /bin/bash
+                  - -xec
+                  - |
+                    redis-cli ping
+      volumes:
+        - name: redis-conf
+          configMap:
+            name: redis-master
+        - name: redis-data
+          quobyte:
+            registry: 138.68.101.22:7861
+            volume: redis-master
+            readOnly: false
+            user: root
+            group: root
