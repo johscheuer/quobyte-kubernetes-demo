@@ -16,9 +16,9 @@ spec:
     spec:
       containers:
         - name: "todo-app"
-          image: "johscheuer/todo-app-web:v2"
+          image: "johscheuer/todo-app-web:v4"
           command: ["./todo-app"]
-          args: ["-master", "${REDIS_MASTER_URL}", "-slave", "${REDIS_SLAVE_URL}"]
+          args: ["-config-file", "/etc/redis.config"]
           resources:
             limits:
               cpu: 100m
@@ -26,17 +26,9 @@ spec:
             requests:
               cpu: 100m
               memory: 500Mi
-          env:
-            - name: REDIS_MASTER_URL
-              valueFrom:
-                configMapKeyRef:
-                  name: todo-app-config
-                  key: redis.master
-            - name: REDIS_SLAVE_URL
-              valueFrom:
-                configMapKeyRef:
-                  name: todo-app-config
-                  key: redis.slave
+          volumeMounts:
+            - name: "todo-app-conf"
+              mountPath: "/etc/"
           ports:
             - containerPort: 3000
               protocol: "TCP"
@@ -53,3 +45,7 @@ spec:
               scheme: HTTP
             initialDelaySeconds: 10
             timeoutSeconds: 5
+      volumes:
+        - name: todo-app-conf
+          configMap:
+            name: todo-app-config

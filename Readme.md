@@ -33,6 +33,9 @@ $ curl -L localhost:8001/api/v1/proxy/namespaces/todo-app/services/todo-app/read
 Now we can kill our redis-master which holds all todos:
 
 ```bash
+# Just to ensure our app reads directly from the master
+$ kubectl -n todo-app scale --replicas=0 deployment/redis-slave
+
 $ NODE=$(kubectl -n todo-app get po -o jsonpath='{.items[*].status.hostIP}' -l name=redis-master)
 
 # Let's see on which node the mater is running

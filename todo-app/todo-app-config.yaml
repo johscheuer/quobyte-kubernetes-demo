@@ -4,5 +4,14 @@ metadata:
   name: todo-app-config
   namespace: todo-app
 data:
-  redis.master: "redis-master:6379"
-  redis.slave: "redis-slave:6379"
+  redis.conf: |-
+    {
+      "HealthCheckTime": 0,
+      "DBDriver": "redis",
+      "DBConfig": {
+        "master": "redis-master:6379",
+        "master-password": "",
+        "slave": "redis-slave:6379",
+        "slave-password": ""
+      }
+    }
