@@ -53,7 +53,7 @@ spec:
             name: redis-master
         - name: redis-data
           quobyte:
-            registry: 138.68.101.22:7861
+            registry: 46.101.169.89:7861
             volume: redis-master
             readOnly: false
             user: root

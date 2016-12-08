@@ -13,5 +13,6 @@ data:
         "master-password": "",
         "slave": "redis-slave:6379",
         "slave-password": ""
-      }
+      },
+      "ReleaseMode": "release"
     }

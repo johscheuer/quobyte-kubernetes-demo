@@ -16,9 +16,9 @@ spec:
     spec:
       containers:
         - name: "todo-app"
-          image: "johscheuer/todo-app-web:v4"
+          image: "johscheuer/todo-app-web:v6"
           command: ["./todo-app"]
-          args: ["-config-file", "/etc/redis.config"]
+          args: ["-config-file", "/etc/redis.conf"]
           resources:
             limits:
               cpu: 100m
